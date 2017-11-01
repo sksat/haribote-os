@@ -34,19 +34,19 @@ install () {
 		pac=$1
 		com=$2
 	fi
+	printf "%-30s" "install $pac ..."
 	if [ type $com > /dev/null 2>&1 ]; then
 		root
 		apt-get install -y $pac
 	else
-		printf $pac
-		printf ": already installed.\n"
+		printf "already installed.\n"
 	fi
 }
 
 echo "install tools for OS dev"
-root
-echo "install git..."
+
 install git
+install hexedit
 
 echo "install tolset..."
 if [ ! -e tolset ]; then
@@ -62,7 +62,6 @@ else
 	git clone https://github.com/HariboteOS/z_tools_linux tolset/z_tools
 fi
 if [ `getconf LONG_BIT` = "64" ]; then
-	echo "install libc6-i386"
 	install libc6-i386
 fi
 install qemu
