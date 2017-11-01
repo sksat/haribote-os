@@ -1,11 +1,13 @@
 # 1-1 とにかくやるのだぁ
 さて，圧倒的「「やるだけ」」のお時間です．
 
+<s>
 まずはバイナリエディタを入れます．
 まあhexeditでいいでしょう．
 ```
 # apt-get install hexedit
 ```
+</s>
 
 それではhelloos.imgを作っていきます．
 
@@ -37,11 +39,13 @@ $ cat helloos.img zero > tmp.img
 QEMUはホントすごくて，すごいです(語彙喪失)入ってない人はこの機会に入れておきましょう．
 
 
+<s>
 QEMUのインストールは(Ubuntuとかなら)超簡単です．
 ```
 # apt-get install qemu
 ```
 はい，終わり．
+</s>
 QEMUでフロッピーディスクイメージをブートするときはこんなかんじ．
 ```
 $ qemu-system-i386 -fda helloos.img
