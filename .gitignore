@@ -1,6 +1,9 @@
 # tool set
 tolset/
 
+# binary
+*.img
+
 # Prerequisites
 *.d
 
