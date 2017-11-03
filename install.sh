@@ -43,10 +43,20 @@ install () {
 	fi
 }
 
+check_emacs () {
+	if [ ! `type emacs > /dev/null 2>&1` ]; then
+		echo "warning: emacs found!"
+	fi
+}
+
 echo "install tools for OS dev"
 
 install git
 install hexedit
+
+check_emacs
+
+install vim
 
 echo "install tolset..."
 if [ ! -e tolset ]; then
