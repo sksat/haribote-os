@@ -5,6 +5,7 @@ tolset/
 *.lst
 
 # binary
+*.bin
 *.img
 
 # Prerequisites

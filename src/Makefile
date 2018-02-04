@@ -11,9 +11,9 @@ default :
 ipl.bin : ipl.nas Makefile
 	$(NASK) ipl.nas ipl.bin ipl.lst
 
-helloos.img : ipl.bin Makefile
+haribote.img : ipl.bin Makefile
 	$(EDIMG) imgin:$(Z_TOOLS)fdimg0at.tek \
-		wbinimg src:ipl.bin len:512 from:0 to:0 imgout:helloos.img
+		wbinimg src:ipl.bin len:512 from:0 to:0 imgout:haribote.img
 
 # コマンド
 
@@ -21,11 +21,11 @@ asm :
 	make -r ipl.bin
 
 img :
-	make -r helloos.img
+	make -r haribote.img
 
 run :
 	make img
-	qemu-system-i386 -fda helloos.img
+	qemu-system-i386 -fda haribote.img
 
 clean :
 	rm ipl.bin
@@ -33,4 +33,4 @@ clean :
 
 src_only :
 	make clean
-	rm helloos.img
+	rm haribote.img
