@@ -43,3 +43,16 @@ INT:
 HLT:
 	CPUを停止させる命令．
 	プロセッサはHALT状態になり，基本的には復帰することはない(ただし，一部の割り込みを除く)．
+
+# 2-3 ブートセクタだけを作るように整理
+helloos.nasをipl.nasに改名．
+	IPL: initial program loader
+ipl.nasをnaskでアセンブル，ブートセクタだけのipl.binを作る．
+イメージファイルhelloos.imgはedimgを使って，空のディスクイメージfdimg0at.tek(正確には空のディスクイメージをtek圧縮したもの)を読み込み，その先頭512バイトにipl.binを書き込んでhelloos.imgを出力する．
+コンパイルからテスト実行までの手順は，
+```
+$ ./asm.sh
+$ ./makeimg.sh
+$ ./run.sh
+```
+になりました．
