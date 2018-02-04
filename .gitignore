@@ -1,6 +1,9 @@
 # tool set
 tolset/
 
+# list
+*.lst
+
 # binary
 *.img
 
