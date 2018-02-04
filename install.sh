@@ -76,5 +76,6 @@ if [ `getconf LONG_BIT` = "64" ]; then
 fi
 install qemu
 install bochs-sdl
+install make
 
 echo "all install finished!"
