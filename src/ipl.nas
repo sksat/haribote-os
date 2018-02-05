@@ -40,7 +40,7 @@ entry:
 	MOV	CH,0		; シリンダ0
 	MOV	DH,0		; ヘッド0
 	MOV	CL,2		; セクタ2
-
+readloop:
 	MOV	SI,0		; 失敗回数を数えるレジスタ
 retry:
 	MOV	AH,0x02		; AH:0x02 ディスク読み込み
@@ -48,7 +48,7 @@ retry:
 	MOV	BX,0
 	MOV	DL,0x00		; Aドライブ
 	INT	0x13		; ディスクドライブBIOS
-	JNC	fin		; エラーが起きなければ終わり
+	JNC	next		; エラーが起きなければ終わり
 	ADD	SI,1		; SIに1を足す
 	CMP	SI,5
 	JAE	error		; SI >= 5だったらエラーへ
@@ -56,6 +56,13 @@ retry:
 	MOV	DL,0x00		; Aドライブ
 	INT	0x13		; ドライブのリセット
 	JMP	retry
+next:
+	MOV	AX,ES
+	ADD	AX,512/16	; バッファアドレスはES*16+BXだからこうしておく
+	MOV	ES,AX		; ADD ES,512/16という命令は無い
+	ADD	CL,1		; セクタ番号を1足す
+	CMP	CL,18
+	JBE	readloop	; CL <= 18 だったらreadloopへ
 
 ; 読み終わったけどやることが無いので寝る．ぐーぐー．
 
