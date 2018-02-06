@@ -6,6 +6,7 @@ tolset/
 
 # binary
 *.bin
+*.sys
 *.img
 
 # Prerequisites
