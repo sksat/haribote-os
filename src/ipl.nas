@@ -1,6 +1,8 @@
 ; hello-os
 ; コメントがつけられる
 
+CYLS	EQU	10		; どこまで読み込むか(シリンダ数)
+
 	ORG	0x7c00
 
 ; 以下は標準的なFAT12フォーマットフロッピーディスクのための記述
@@ -63,6 +65,14 @@ next:
 	ADD	CL,1		; セクタ番号を1足す
 	CMP	CL,18
 	JBE	readloop	; CL <= 18 だったらreadloopへ
+	MOV	CL,1
+	ADD	DH,1
+	CMP	DH,2
+	JB	readloop	; DH < 2 だったらreadloopへ
+	MOV	DH,0
+	ADD	CH,1
+	CMP	CH,CYLS
+	JB	readloop	; CH < CYLSだったらreadloopへ
 
 ; 読み終わったけどやることが無いので寝る．ぐーぐー．
 
