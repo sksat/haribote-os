@@ -74,7 +74,8 @@ next:
 	CMP	CH,CYLS
 	JB	readloop	; CH < CYLSだったらreadloopへ
 
-; 読み終わったけどやることが無いので寝る．ぐーぐー．
+; 読み終わったからharibote.sysを実行だ！！！
+	JMP	0xc200
 
 fin:
 	HLT			; 何かあるまでCPUを停止させる
