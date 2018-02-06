@@ -10,15 +10,15 @@ default :
 
 # ファイル生成規則
 
-ipl.bin : ipl.nas Makefile
-	$(NASK) ipl.nas ipl.bin ipl.lst
+ipl10.bin : ipl10.nas Makefile
+	$(NASK) ipl10.nas ipl10.bin ipl10.lst
 
 haribote.sys : haribote.nas Makefile
 	$(NASK) haribote.nas haribote.sys haribote.lst
 
-haribote.img : ipl.bin haribote.sys Makefile
+haribote.img : ipl10.bin haribote.sys Makefile
 	$(EDIMG) imgin:$(Z_TOOLS)fdimg0at.tek \
-		wbinimg src:ipl.bin len:512 from:0 to:0 \
+		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
 		imgout:haribote.img
 
@@ -35,8 +35,8 @@ run :
 	qemu-system-i386 -fda haribote.img
 
 clean :
-	rm ipl.bin
-	rm ipl.lst
+	rm ipl10.bin
+	rm ipl10.lst
 	rm haribote.sys
 	rm haribote.lst
 
