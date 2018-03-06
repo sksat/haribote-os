@@ -1,11 +1,18 @@
 # tool set
 tolset/
 
+# intermediate
+*.gas
+*.obj
+*.bim
+*.hrb
+
 # list
 *.lst
 
 # binary
 *.bin
+*.sys
 *.img
 
 # Prerequisites

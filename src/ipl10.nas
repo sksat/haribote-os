@@ -1,6 +1,8 @@
 ; hello-os
 ; コメントがつけられる
 
+CYLS	EQU	10		; どこまで読み込むか(シリンダ数)
+
 	ORG	0x7c00
 
 ; 以下は標準的なFAT12フォーマットフロッピーディスクのための記述
@@ -40,15 +42,41 @@ entry:
 	MOV	CH,0		; シリンダ0
 	MOV	DH,0		; ヘッド0
 	MOV	CL,2		; セクタ2
-
+readloop:
+	MOV	SI,0		; 失敗回数を数えるレジスタ
+retry:
 	MOV	AH,0x02		; AH:0x02 ディスク読み込み
 	MOV	AL,1		; 1セクタ
 	MOV	BX,0
 	MOV	DL,0x00		; Aドライブ
 	INT	0x13		; ディスクドライブBIOS
-	JC	error
+	JNC	next		; エラーが起きなければ終わり
+	ADD	SI,1		; SIに1を足す
+	CMP	SI,5
+	JAE	error		; SI >= 5だったらエラーへ
+	MOV	AH,0x00
+	MOV	DL,0x00		; Aドライブ
+	INT	0x13		; ドライブのリセット
+	JMP	retry
+next:
+	MOV	AX,ES
+	ADD	AX,512/16	; バッファアドレスはES*16+BXだからこうしておく
+	MOV	ES,AX		; ADD ES,512/16という命令は無い
+	ADD	CL,1		; セクタ番号を1足す
+	CMP	CL,18
+	JBE	readloop	; CL <= 18 だったらreadloopへ
+	MOV	CL,1
+	ADD	DH,1
+	CMP	DH,2
+	JB	readloop	; DH < 2 だったらreadloopへ
+	MOV	DH,0
+	ADD	CH,1
+	CMP	CH,CYLS
+	JB	readloop	; CH < CYLSだったらreadloopへ
 
-; 読み終わったけどやることが無いので寝る．ぐーぐー．
+; 読み終わったからharibote.sysを実行だ！！！
+	MOV	[0x0ff0],CH	; IPLがどこまで読んだのかメモ
+	JMP	0xc200
 
 fin:
 	HLT			; 何かあるまでCPUを停止させる
