@@ -43,10 +43,20 @@ install () {
 	fi
 }
 
+check_emacs () {
+	if [ ! `type emacs > /dev/null 2>&1` ]; then
+		echo "warning: emacs found!"
+	fi
+}
+
 echo "install tools for OS dev"
 
 install git
 install hexedit
+
+check_emacs
+
+install vim
 
 echo "install tolset..."
 if [ ! -e tolset ]; then
@@ -66,5 +76,6 @@ if [ `getconf LONG_BIT` = "64" ]; then
 fi
 install qemu
 install bochs-sdl
+install make
 
 echo "all install finished!"
