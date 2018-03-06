@@ -1,6 +1,12 @@
 # tool set
 tolset/
 
+# intermediate
+*.gas
+*.obj
+*.bim
+*.hrb
+
 # list
 *.lst
 

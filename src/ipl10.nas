@@ -75,6 +75,7 @@ next:
 	JB	readloop	; CH < CYLSだったらreadloopへ
 
 ; 読み終わったからharibote.sysを実行だ！！！
+	MOV	[0x0ff0],CH	; IPLがどこまで読んだのかメモ
 	JMP	0xc200
 
 fin:
