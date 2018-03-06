@@ -1,5 +1,7 @@
+void io_hlt(void);	// 関数のプロトタイプ宣言(外部ファイルの関数)
+
 void HariMain(void){
 fin:
-	// ここにHLTを入れたいが，C言語ではHLTが使えない！
+	io_hlt();	// naskfunc.nasのio_hltを実行
 	goto fin;
 }
