@@ -8,7 +8,7 @@ void HariMain(void){
 	p = (char*)0xa0000; // VRAM開始番地
 
 	for(i=0; i<= 0xffff; i++){
-		*(p + i) = i & 0x0f; // 0xa0000 + i番地にi & 0x0fを代入
+		p[i] = i & 0x0f; // 0xa0000 + i番地にi & 0x0fを代入
 	}
 
 	for(;;){
