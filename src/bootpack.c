@@ -7,6 +7,26 @@ void io_store_eflags(int eflags);
 // 同一ファイル内の関数でも定義前に使うなら宣言が必要
 void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
+void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1);
+
+// #defineは単純に文字列が置換される．
+// ここでは色番号と色の対応を覚えなくて良いようにしている．
+#define COL8_000000	0
+#define COL8_FF0000	1
+#define COL8_00FF00	2
+#define COL8_FFFF00	3
+#define COL8_0000FF	4
+#define COL8_FF00FF	5
+#define COL8_00FFFF	6
+#define COL8_FFFFFF	7
+#define COL8_C6C6C6	8
+#define COL8_840000	9
+#define COL8_008400	10
+#define COL8_848400	11
+#define COL8_000084	12
+#define COL8_840084	13
+#define COL8_008484	14
+#define COL8_848484	15
 
 void HariMain(void){
 	int i; // 変数宣言．iは32bitの整数型
@@ -16,9 +36,9 @@ void HariMain(void){
 
 	p = (char*)0xa0000; // VRAM開始番地
 
-	for(i=0; i<= 0xffff; i++){
-		p[i] = i & 0x0f; // 0xa0000 + i番地にi & 0x0fを代入
-	}
+	boxfill8(p, 320, COL8_FF0000,  20,  20, 120, 120);
+	boxfill8(p, 320, COL8_00FF00,  70,  50, 170, 150);
+	boxfill8(p, 320, COL8_0000FF, 120,  80, 220, 180);
 
 	for(;;){
 		io_hlt();
@@ -65,4 +85,12 @@ void set_palette(int start, int end, unsigned char *rgb){
 
 	io_store_eflags(eflags);
 	return;
+}
+
+void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1){
+	int x, y;
+	for(y=y0; y<=y1; y++){
+		for(x=x0; x<=x1; x++)
+			vram[y * xsize +x] = c; // 座標(x,y)の点に対応する番地は[vram(0xa0000) + y * ysize(320) + x]
+	}
 }
