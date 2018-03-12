@@ -29,16 +29,36 @@ void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, i
 #define COL8_848484	15
 
 void HariMain(void){
-	int i; // 変数宣言．iは32bitの整数型
-	char* p; // 番地変数(ポインタ)．char*なのでBYTE [...]用の番地
+	char *vram; // VRAMの先頭アドレス
+	int xsize, ysize; // 画面のx,y方向サイズ
 
 	init_palette(); // パレットを設定
 
-	p = (char*)0xa0000; // VRAM開始番地
+	vram = (char*)0xa0000; // VRAM開始番地
+	xsize = 320;
+	ysize = 200;
 
-	boxfill8(p, 320, COL8_FF0000,  20,  20, 120, 120);
-	boxfill8(p, 320, COL8_00FF00,  70,  50, 170, 150);
-	boxfill8(p, 320, COL8_0000FF, 120,  80, 220, 180);
+	// 背景
+	boxfill8(vram, xsize, COL8_008484,	 0,		0,   xsize - 1, ysize - 29);
+	// タスクバーとの分かれ目
+	boxfill8(vram, xsize, COL8_C6C6C6,	 0,	ysize - 28,  xsize - 1, ysize - 28);
+	boxfill8(vram, xsize, COL8_FFFFFF,	 0,	ysize - 27,  xsize - 1, ysize - 27);
+	// タスクバーの背景
+	boxfill8(vram, xsize, COL8_C6C6C6,	 0,	ysize - 26,  xsize - 1, ysize -  1);
+
+	// 左のボタン
+	boxfill8(vram, xsize, COL8_FFFFFF,	 3,	ysize - 24,	59,	ysize - 24);
+	boxfill8(vram, xsize, COL8_FFFFFF,	 2,	ysize - 24,	2,	ysize -  4);
+	boxfill8(vram, xsize, COL8_848484,	 3,	ysize -  4,	59,	ysize -  4);
+	boxfill8(vram, xsize, COL8_848484,	59,	ysize - 23,	59,	ysize -  5);
+	boxfill8(vram, xsize, COL8_000000,	 2,	ysize -  3,	59,	ysize -  3);
+	boxfill8(vram, xsize, COL8_000000,	60,	ysize - 24,	60,	ysize -  3);
+
+	// 右のボタン
+	boxfill8(vram, xsize, COL8_848484, xsize - 47,	ysize - 24, xsize -  4, ysize - 24);
+        boxfill8(vram, xsize, COL8_848484, xsize - 47,	ysize - 23, xsize - 47, ysize -  4);
+        boxfill8(vram, xsize, COL8_FFFFFF, xsize - 47,	ysize -  3, xsize -  4, ysize -  3);
+        boxfill8(vram, xsize, COL8_FFFFFF, xsize -  3,	ysize - 24, xsize -  3, ysize -  3);
 
 	for(;;){
 		io_hlt();
