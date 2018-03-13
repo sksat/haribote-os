@@ -3,6 +3,7 @@ tolset/
 
 # intermediate
 *.gas
+*.nas
 *.obj
 *.bim
 *.hrb
