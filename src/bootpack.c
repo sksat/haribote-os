@@ -9,6 +9,7 @@ void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
 void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1);
 void init_screen(char *vram, int xsize, int ysize);
+void putfont8(char *vram, int xsize, int x, int y, char c, char *font);
 
 // #defineは単純に文字列が置換される．
 // ここでは色番号と色の対応を覚えなくて良いようにしている．
@@ -36,16 +37,15 @@ struct BOOTINFO {
 };
 
 void HariMain(void){
-	char *vram; // VRAMの先頭アドレス
-	int xsize, ysize; // 画面のx,y方向サイズ
-
-	struct BOOTINFO *binfo;
+	struct BOOTINFO *binfo = (struct BOOTINFO *) 0x0ff0;
+	static char font_A[16] = {
+		0x00, 0x18, 0x18, 0x18, 0x18, 0x24, 0x24, 0x24,
+		0x24, 0x7e, 0x42, 0x42, 0x42, 0xe7, 0x00, 0x00
+	};
 
 	init_palette(); // パレットを設定
-
-	binfo = (struct BOOTINFO *) 0x0ff0;
-
 	init_screen(binfo->vram, binfo->scrnx, binfo->scrny);
+	putfont8(binfo->vram, binfo->scrnx, 10, 10, COL8_FFFFFF, font_A);
 
 	for(;;){
 		io_hlt();
@@ -125,4 +125,26 @@ void init_screen(char *vram, int xsize, int ysize){
 	boxfill8(vram, xsize, COL8_FFFFFF, xsize - 47,	ysize -  3, xsize -  4, ysize -  3);
 	boxfill8(vram, xsize, COL8_FFFFFF, xsize -  3,	ysize - 24, xsize -  3, ysize -  3);
 
+}
+
+void putfont8(char *vram, int xsize, int x, int y, char c,char *font){
+	int i;
+	char* p;
+	char d; // data
+
+	for(i=0; i<16; i++){			// フォントは16行あるので1行ずつ処理する
+		p = vram + (y+i) * xsize + x;	// i行目の最初のVRAMの番地
+		d = font[i];			// i行目のフォントデータ
+
+		if((d & 0x80) != 0) p[0] = c;	// i行0列目のデータを取り出して，0でなければ色を設定
+		if((d & 0x40) != 0) p[1] = c;	// i行1列目のデータを取り出して，0でなければ色を設定
+		if((d & 0x20) != 0) p[2] = c;	// なんで0x80とか0x40なのかというと，
+		if((d & 0x10) != 0) p[3] = c;	// 0x80が2進数で10000000,
+		if((d & 0x08) != 0) p[4] = c;	// 0x40が2進数で01000000,
+		if((d & 0x04) != 0) p[5] = c;	// 0x20が2進数で00100000,
+		if((d & 0x02) != 0) p[6] = c;	// なので，各行のフォントデータとこれらの値のANDをとると
+		if((d & 0x01) != 0) p[7] = c;	// それぞれの列のデータだけが残る，という理由．
+	}
+
+	return;
 }
