@@ -29,22 +29,25 @@ void init_screen(char *vram, int xsize, int ysize);
 #define COL8_008484	14
 #define COL8_848484	15
 
+struct BOOTINFO {
+	char cyls, leds, vmode, reserve;
+	short scrnx, scrny;
+	char* vram;
+};
+
 void HariMain(void){
 	char *vram; // VRAMの先頭アドレス
 	int xsize, ysize; // 画面のx,y方向サイズ
 
-	short *binfo_scrnx, *binfo_scrny;
-	int *binfo_vram;
+	struct BOOTINFO *binfo;
 
 	init_palette(); // パレットを設定
 
-	binfo_scrnx = (short*) 0x0ff4;
-	binfo_scrny = (short*) 0x0ff6;
-	binfo_vram  = (int*) 0xff8;
+	binfo = (struct BOOTINFO *) 0x0ff0;
 
-	vram = (char*) *binfo_vram; // VRAM開始番地
-	xsize = *binfo_scrnx;
-	ysize = *binfo_scrny;
+	xsize = (*binfo).scrnx;
+	ysize = (*binfo).scrny;
+	vram  = (*binfo).vram;
 
 	init_screen(vram, xsize, ysize);
 
