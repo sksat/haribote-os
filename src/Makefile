@@ -7,6 +7,8 @@ EDIMG	= $(Z_TOOLS)edimg
 CC1	= $(Z_TOOLS)gocc1 -I$(INCPATH) -Os -Wall -quiet
 GAS2NASK= $(Z_TOOLS)gas2nask -a
 OBJ2BIM = $(Z_TOOLS)obj2bim
+MAKEFONT= $(Z_TOOLS)makefont
+BIN2OBJ = $(Z_TOOLS)bin2obj
 RULEFILE= haribote.rul
 BIM2HRB	= $(Z_TOOLS)bim2hrb
 HARITOL	= $(Z_TOOLS)haritol
@@ -36,10 +38,17 @@ bootpack.obj : bootpack.nas Makefile
 naskfunc.obj : naskfunc.nas Makefile
 	$(NASK) naskfunc.nas naskfunc.obj naskfunc.lst
 
-bootpack.bim : bootpack.obj naskfunc.obj Makefile
+hankaku.bin : hankaku.txt Makefile
+	$(MAKEFONT) hankaku.txt hankaku.bin
+
+hankaku.obj : hankaku.bin Makefile
+	$(BIN2OBJ) hankaku.bin hankaku.obj _hankaku
+
+bootpack.bim : bootpack.obj naskfunc.obj hankaku.obj Makefile
 	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
 		bootpack.obj \
-		naskfunc.obj
+		naskfunc.obj \
+		hankaku.obj
 # 3MB+64KB=3136KB
 
 bootpack.hrb : bootpack.bim Makefile
@@ -67,17 +76,14 @@ run :
 	qemu-system-i386 -fda haribote.img
 
 clean :
-	rm ipl10.bin
-	rm ipl10.lst
-	rm asmhead.bin
-	rm asmhead.lst
+	rm *.bin
+	rm *.lst
+	rm *.gas
+	rm *.obj
 	rm bootpack.hrb
-	rm bootpack.lst
 	rm bootpack.map
 	rm bootpack.bim
-	rm bootpack.obj
 	rm bootpack.nas
-	rm bootpack.gas
 	rm haribote.sys
 
 src_only :
